@@ -10,14 +10,14 @@ async function run() {
     const actor = context.actor;
     const comment = context.payload.comment;
 
-    core.debug("Owner: " & owner);
-    core.debug("Repo: " & repo);
-    core.debug("Actor: " & actor);
+    core.debug("Owner: " + owner);
+    core.debug("Repo: " + repo);
+    core.debug("Actor: " + actor);
 
     // Get mentioned user(s)
     const mentionedUsers = await parseComment(comment);
 
-    core.debug("Mentioned users: " & mentionedUsers);
+    core.debug("Mentioned users: " + mentionedUsers);
 
     // ONLY SUPPORTS FIRST MENTION
     const mentionedUsername = mentionedUsers[0];
@@ -29,7 +29,7 @@ async function run() {
       mentionedUsername
     });
 
-    core.debug("Is collaborator: " & isCollaborator);
+    core.debug("Is collaborator: " + isCollaborator);
 
     // Is the repository an individual or organization repo?
     const isOrgOwned = github.repos.get({
@@ -37,7 +37,7 @@ async function run() {
       repo
     }).type === 'User' ? false : true;
 
-    core.debug("Is org owned: " & isOrgOwned);
+    core.debug("Is org owned: " + isOrgOwned);
 
     // For org, is the mentioned user already a member of the organization?
     if (isOrgOwned) {
@@ -48,7 +48,7 @@ async function run() {
         mentionedUsername
       });
 
-      core.debug("Is org member: " & isOrgMember);
+      core.debug("Is org member: " + isOrgMember);
     }
   } 
   catch (error) {
