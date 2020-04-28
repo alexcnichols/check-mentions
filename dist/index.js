@@ -548,9 +548,11 @@ async function run() {
 
     // For org, is the mentioned user already a member of the organization?
     if (isOrgOwned) {
+      // Get elevated personally authenticated GitHub client (Ocktokit)
+      const githubElevated = new GitHub(process.env.GITHUB_PERSONAL_TOKEN);
       const org = owner;
 
-      const isOrgMember = github.orgs.checkMembership({
+      const isOrgMember = githubElevated.orgs.checkMembership({
         org,
         mentionedUsername
       });
