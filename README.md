@@ -7,71 +7,32 @@
 
 A GitHub Action to check mentions in issues and pull requests for misspellings by inferring from access to the repository.
 
-## Code in master branch
+---
 
-Install the dependencies  
-```bash
-$ npm install
-```
+## Setup
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+**check-mentions** is a GitHub Actions that is designed to work using the [`issue_comment`](https://help.github.com/en/actions/reference/events-that-trigger-workflows#issue-comment-event-issue_comment) event.
 
- PASS  ./parse-comment.test.js
-  ✓ parses 1 matching username (1ms)
-  ✓ fails to parse mis-typed username (1ms)
-  ✓ parses 2 matching usernames
+### Preparations
 
-...
-```
+If you're setting this workflow up within an organization-owned repository: [Create a new personal access token with the `read:org` scope](https://github.com/settings/tokens/new?scopes=read:org&description=check-mentions), copy it, and add it to the repository's secret store with the name `GITHUB_PERSONAL_TOKEN_ORG_READ`. The `GITHUB_TOKEN` that comes with GitHub Actions cannot read organization memberships.
 
-## Package for distribution
+### Workflow setup
 
-GitHub Actions will run the entry point from the action.yml. Packaging assembles the code into one file that can be checked in to Git, enabling fast and reliable execution and preventing the need to check in node_modules.
-
-Actions are run from GitHub repos.  Packaging the action will create a packaged action in the dist folder.
-
-Run package
-
-```bash
-npm run package
-```
-
-Since the packaged index.js is run from the dist folder.
-
-```bash
-git add dist
-```
-
-## Create a release branch
-
-Users shouldn't consume the action from master since that would be latest code and actions can break compatibility between major versions.
-
-Checkin to the v1 release branch
-
-```bash
-$ git checkout -b v1
-$ git commit -a -m "v1 release"
-```
-
-```bash
-$ git push origin v1
-```
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Usage
-
-You can now consume the action by referencing the v1 branch
+Create a `.github/workflows/check-mentions.yml` file like this:
 
 ```yaml
-uses: alexcnichols/javascript-action@v1
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  GITHUB_PERSONAL_TOKEN: ${{ secrets.GITHUB_PERSONAL_TOKEN }}
+name: Check issue comment mentions
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: alexcnichols/check-mentions@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PERSONAL_TOKEN_ORG_READ: ${{ secrets.GITHUB_PERSONAL_TOKEN_ORG_READ }}
 ```
-
-See the [actions tab](https://github.com/alexcnichols/check-mentions/actions) for runs of this action! :rocket:
