@@ -1,13 +1,8 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
-inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
-    required: true
-    default: '1000'
-outputs:
-  time: # output will be available to future steps 
-    description: 'The message to output'
+name: 'Check mentions'
+description: 'Check mentions in issues and pull requests for misspellings by inferring from access to the repository.'
 runs:
   using: 'node12'
   main: 'dist/index.js'
+branding:
+  icon: at-sign
+  color: gray-dark

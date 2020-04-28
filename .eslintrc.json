@@ -12,6 +12,15 @@
     "parserOptions": {
         "ecmaVersion": 2018
     },
-    "rules": {
-    }
+    "rules": {},
+    "overrides": [
+        {
+            "files": [
+                "*.test.js"
+            ],
+            "env": {
+                "jest": true
+            }
+        }
+    ]
 }

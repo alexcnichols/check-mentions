@@ -54,20 +54,58 @@ module.exports = require("os");
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(470);
-const wait = __webpack_require__(949);
+const github = __webpack_require__(690);
+const parseComment = __webpack_require__(386);
 
-
-// most @actions toolkit packages have async methods
 async function run() {
-  try { 
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+  try {
+    // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
+    const client = new github.GitHub(process.env.GITHUB_TOKEN);
+    const owner = client.context.owner; 
+    const repo = client.context.repo; 
+    const actor = client.context.actor;
+    const comment = client.context.payload.comment;
 
-    core.debug((new Date()).toTimeString())
-    wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
+    core.debug("Owner: " & owner);
+    core.debug("Repo: " & repo);
+    core.debug("Actor: " & actor);
 
-    core.setOutput('time', new Date().toTimeString());
+    // Get mentioned user(s)
+    const mentionedUsers = await parseComment(comment);
+
+    core.debug("Mentioned users: " & mentionedUsers);
+
+    // ONLY SUPPORTS FIRST MENTION
+    const mentionedUsername = mentionedUsers[0];
+
+    // Does the mentioned user already have access to the repository either directly or through a team membership?
+    const isCollaborator = client.repos.checkCollaborator({
+      owner,
+      repo,
+      mentionedUsername
+    });
+
+    core.debug("Is collaborator: " & isCollaborator);
+
+    // Is the repository an individual or organization repo?
+    const isOrgOwned = client.repos.get({
+      owner,
+      repo
+    }).type === 'User' ? false : true;
+
+    core.debug("Is org owned: " & isOrgOwned);
+
+    // For org, is the mentioned user already a member of the organization?
+    if (isOrgOwned) {
+      const org = owner;
+
+      const isOrgMember = client.orgs.checkMembership({
+        org,
+        mentionedUsername
+      });
+
+      core.debug("Is org member: " & isOrgMember);
+    }
   } 
   catch (error) {
     core.setFailed(error.message);
@@ -75,6 +113,18 @@ async function run() {
 }
 
 run()
+
+
+/***/ }),
+
+/***/ 386:
+/***/ (function(module) {
+
+let parseComment = function(comment) {
+  return comment.match(/(\B@(\w+))/gi);
+}
+
+module.exports = parseComment;
 
 
 /***/ }),
@@ -343,20 +393,10 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 949:
-/***/ (function(module) {
+/***/ 690:
+/***/ (function() {
 
-let wait = function(milliseconds) {
-  return new Promise((resolve, reject) => {
-    if (typeof(milliseconds) !== 'number') { 
-      throw new Error('milleseconds not a number'); 
-    }
-
-    setTimeout(() => resolve("done!"), milliseconds)
-  });
-}
-
-module.exports = wait;
+eval("require")("@actions/github");
 
 
 /***/ })
