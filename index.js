@@ -17,6 +17,14 @@ async function run() {
     core.debug("Repo: " + repo);
     core.debug("Actor: " + actor);
 
+    // Check if issue_comment event
+    if (context.eventName === 'issue_comment') {
+      core.debug("Valid event: " + context.eventName);
+    } else {
+      core.debug("Invalid event: " + context.eventName);
+      return;
+    }
+
     // Check is a comment exists
     if (comment && comment.body) {
       var commentDebug = comment.body.length > 18 ? "Comment (beginning): " + comment.body.substr(0, 15) + "..." : "Comment (beginning): " + comment.body
@@ -32,6 +40,7 @@ async function run() {
     core.debug("Mentioned users: " + mentionedUsers);
 
     // ONLY SUPPORTS FIRST MENTION
+    // TODO
     const mentionedUsername = mentionedUsers[0];
 
     // Does the mentioned user already have access to the repository either directly or through a team membership?
