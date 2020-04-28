@@ -502,7 +502,7 @@ const parseComment = __webpack_require__(386);
 
 async function run() {
   try {
-    // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
+    // Get authenticated GitHub client (Ocktokit) and other context
     const github = new GitHub(process.env.GITHUB_TOKEN);
     const { owner, repo } = context.repo;
     const actor = context.actor;
@@ -511,6 +511,15 @@ async function run() {
     core.debug("Owner: " + owner);
     core.debug("Repo: " + repo);
     core.debug("Actor: " + actor);
+
+    // Check is a comment exists
+    if (comment) {
+      var commentDebug = comment.length > 18 ? "Comment (beginning): " + comment.substr(0, 15) + "..." : "Comment (beginning): " + comment
+      core.debug(commentDebug);
+    } else {
+      core.debug("Comment is empty. Returning.");
+      return;
+    }
 
     // Get mentioned user(s)
     const mentionedUsers = await parseComment(comment);
@@ -548,7 +557,7 @@ async function run() {
 
       core.debug("Is org member: " + isOrgMember);
     }
-  } 
+  }
   catch (error) {
     core.setFailed(error.message);
   }
