@@ -1,11 +1,9 @@
 
-<p align="center">
-  <a href="https://github.com/alexcnichols/check-mentions/actions"><img alt="check-mentions status" src="https://github.com/alexcnichols/check-mentions/workflows/units-test/badge.svg"></a>
-</p>
-
 # Check mentions
 
 A GitHub Action to check mentions in issues and pull requests for misspellings by inferring from access to the repository.
+
+<a href="https://github.com/alexcnichols/check-mentions/actions"><img alt="check-mentions status" src="https://github.com/alexcnichols/check-mentions/workflows/units-test/badge.svg"></a>
 
 ---
 
