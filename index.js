@@ -8,7 +8,7 @@ async function run() {
     const github = new GitHub(process.env.GITHUB_TOKEN);
     const { owner, repo } = context.repo;
     const actor = context.actor;
-    const comment = context.payload.comment.body;
+    const comment = context.payload.comment;
 
     core.debug("Event name: " + context.eventName);
     core.debug("Workflow: " + context.workflow);
@@ -18,8 +18,8 @@ async function run() {
     core.debug("Actor: " + actor);
 
     // Check is a comment exists
-    if (comment) {
-      var commentDebug = comment.length > 18 ? "Comment (beginning): " + comment.substr(0, 15) + "..." : "Comment (beginning): " + comment
+    if (comment && comment.body) {
+      var commentDebug = comment.body.length > 18 ? "Comment (beginning): " + comment.body.substr(0, 15) + "..." : "Comment (beginning): " + comment.body
       core.debug(commentDebug);
     } else {
       core.debug("Comment is empty. Returning.");
@@ -27,7 +27,7 @@ async function run() {
     }
 
     // Get mentioned user(s)
-    const mentionedUsers = await parseComment(comment);
+    const mentionedUsers = await parseComment(comment.body);
 
     core.debug("Mentioned users: " + mentionedUsers);
 
