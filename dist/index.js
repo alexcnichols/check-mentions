@@ -497,17 +497,16 @@ module.exports = require("os");
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const core = __webpack_require__(470);
-const github = __webpack_require__(469);
+const { GitHub, context } = __webpack_require__(469);
 const parseComment = __webpack_require__(386);
 
 async function run() {
   try {
     // Get authenticated GitHub client (Ocktokit): https://github.com/actions/toolkit/tree/master/packages/github#usage
-    const client = new github.GitHub(process.env.GITHUB_TOKEN);
-    const owner = client.context.owner; 
-    const repo = client.context.repo; 
-    const actor = client.context.actor;
-    const comment = client.context.payload.comment;
+    const github = new GitHub(process.env.GITHUB_TOKEN);
+    const { owner, repo } = context.repo;
+    const actor = context.actor;
+    const comment = context.payload.comment;
 
     core.debug("Owner: " & owner);
     core.debug("Repo: " & repo);
@@ -522,7 +521,7 @@ async function run() {
     const mentionedUsername = mentionedUsers[0];
 
     // Does the mentioned user already have access to the repository either directly or through a team membership?
-    const isCollaborator = client.repos.checkCollaborator({
+    const isCollaborator = github.repos.checkCollaborator({
       owner,
       repo,
       mentionedUsername
@@ -531,7 +530,7 @@ async function run() {
     core.debug("Is collaborator: " & isCollaborator);
 
     // Is the repository an individual or organization repo?
-    const isOrgOwned = client.repos.get({
+    const isOrgOwned = github.repos.get({
       owner,
       repo
     }).type === 'User' ? false : true;
@@ -542,7 +541,7 @@ async function run() {
     if (isOrgOwned) {
       const org = owner;
 
-      const isOrgMember = client.orgs.checkMembership({
+      const isOrgMember = github.orgs.checkMembership({
         org,
         mentionedUsername
       });
