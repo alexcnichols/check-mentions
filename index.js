@@ -8,8 +8,11 @@ async function run() {
     const github = new GitHub(process.env.GITHUB_TOKEN);
     const { owner, repo } = context.repo;
     const actor = context.actor;
-    const comment = context.payload.comment;
+    const comment = context.payload.comment.body;
 
+    core.debug("Event name: " + context.eventName);
+    core.debug("Workflow: " + context.workflow);
+    core.debug("Action: " + context.action);
     core.debug("Owner: " + owner);
     core.debug("Repo: " + repo);
     core.debug("Actor: " + actor);
@@ -61,6 +64,12 @@ async function run() {
 
       core.debug("Is org member: " + isOrgMember);
     }
+
+    // Depending on the situation, draft a comment with appropriate wording
+    // TODO
+
+    // Create comment
+    // TODO
   }
   catch (error) {
     core.setFailed(error.message);
