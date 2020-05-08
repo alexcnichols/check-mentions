@@ -548,6 +548,11 @@ async function run() {
     const mentionedUsername = mentionedUsers[0];
 
     // Does the mentioned user already have access to the repository either directly or through a team membership?
+    console.debug(github.repos.checkCollaborator({
+      owner,
+      repo,
+      mentionedUsername
+    }).status);
     const isCollaborator = github.repos.checkCollaborator({
       owner,
       repo,
