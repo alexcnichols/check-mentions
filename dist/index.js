@@ -579,6 +579,8 @@ async function run() {
 
     core.debug("Is org owned: " + isOrgOwned);
 
+    // TODO
+    return;
     // For org, is the mentioned user already a member of the organization?
     if (isOrgOwned) {
       // Get elevated personally authenticated GitHub client (Ocktokit)
