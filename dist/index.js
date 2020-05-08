@@ -536,7 +536,8 @@ async function run() {
     const mentionedUsers = await parseComment(comment.body);
 
     // ONLY SUPPORTS FIRST MENTION
-    // TODO
+    // TODO: Handle multiple people mentioned
+    // TODO: Handle when the same person was mentioned more than once
     if (mentionedUsers && mentionedUsers.length) {
       core.debug("Mentioned user count: " + mentionedUsers.length);
       core.debug("Mentioned users: " + mentionedUsers);
@@ -551,11 +552,15 @@ async function run() {
       owner,
       repo,
       mentionedUsername
-    });
+    }).status === 204 ? true : false;
 
     core.debug("Is collaborator: " + isCollaborator);
 
     // Is the repository an individual or organization repo?
+    core.debug(github.repos.get({
+      owner,
+      repo
+    }).type);
     const isOrgOwned = github.repos.get({
       owner,
       repo
