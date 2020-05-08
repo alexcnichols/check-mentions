@@ -41,6 +41,10 @@ async function run() {
 
     // ONLY SUPPORTS FIRST MENTION
     // TODO
+    if (!mentionedUsers || !mentionedUsers.length) {
+      core.debug("No mentioned users. Returning.");
+      return;
+    }
     const mentionedUsername = mentionedUsers[0];
 
     // Does the mentioned user already have access to the repository either directly or through a team membership?
