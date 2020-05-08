@@ -48,6 +48,7 @@ async function run() {
       return;
     }
     const mentionedUsername = mentionedUsers[0];
+    core.debug("Mentioned username: "+ mentionedUsername);
 
     // Does the mentioned user already have access to the repository either directly or through a team membership?
     core.debug(github.repos.checkCollaborator({
