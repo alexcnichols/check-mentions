@@ -54,11 +54,15 @@ async function run() {
       owner,
       repo,
       mentionedUsername
-    });
+    }).status === 204 ? true : false;
 
     core.debug("Is collaborator: " + isCollaborator);
 
     // Is the repository an individual or organization repo?
+    core.debug(github.repos.get({
+      owner,
+      repo
+    }).type);
     const isOrgOwned = github.repos.get({
       owner,
       repo
