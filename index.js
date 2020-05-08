@@ -38,7 +38,8 @@ async function run() {
     const mentionedUsers = await parseComment(comment.body);
 
     // ONLY SUPPORTS FIRST MENTION
-    // TODO
+    // TODO: Handle multiple people mentioned
+    // TODO: Handle when the same person was mentioned more than once
     if (mentionedUsers && mentionedUsers.length) {
       core.debug("Mentioned user count: " + mentionedUsers.length);
       core.debug("Mentioned users: " + mentionedUsers);
