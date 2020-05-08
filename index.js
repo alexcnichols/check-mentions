@@ -37,11 +37,11 @@ async function run() {
     // Get mentioned user(s)
     const mentionedUsers = await parseComment(comment.body);
 
-    core.debug("Mentioned users: " + mentionedUsers);
-
     // ONLY SUPPORTS FIRST MENTION
     // TODO
-    if (!mentionedUsers || !mentionedUsers.length) {
+    if (mentionedUsers && mentionedUsers.length) {
+      core.debug("Mentioned users: " + mentionedUsers);
+    } else {
       core.debug("No mentioned users. Returning.");
       return;
     }
