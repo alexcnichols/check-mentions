@@ -40,6 +40,7 @@ async function run() {
     // ONLY SUPPORTS FIRST MENTION
     // TODO
     if (mentionedUsers && mentionedUsers.length) {
+      core.debug("Mentioned user count: " + mentionedUsers.length);
       core.debug("Mentioned users: " + mentionedUsers);
     } else {
       core.debug("No mentioned users. Returning.");
