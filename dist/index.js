@@ -549,17 +549,17 @@ async function run() {
     core.debug("Mentioned username: "+ mentionedUsername);
 
     // Does the mentioned user already have access to the repository either directly or through a team membership?
-    core.debug(github.repos.checkCollaborator({
+    core.debug(await github.repos.checkCollaborator({
       owner,
       repo,
       mentionedUsername
     }).status);
-    core.debug(github.repos.checkCollaborator({
+    core.debug(await github.repos.checkCollaborator({
       owner,
       repo,
       mentionedUsername
     }).keys);
-    const isCollaborator = github.repos.checkCollaborator({
+    const isCollaborator = await github.repos.checkCollaborator({
       owner,
       repo,
       mentionedUsername
@@ -568,11 +568,11 @@ async function run() {
     core.debug("Is collaborator: " + isCollaborator);
 
     // Is the repository an individual or organization repo?
-    core.debug(github.repos.get({
+    core.debug(await github.repos.get({
       owner,
       repo
     }).type);
-    const isOrgOwned = github.repos.get({
+    const isOrgOwned = await github.repos.get({
       owner,
       repo
     }).type === 'User' ? false : true;
@@ -587,7 +587,7 @@ async function run() {
       const githubElevated = new GitHub(process.env.GITHUB_PERSONAL_TOKEN_ORG_READ);
       const org = owner;
 
-      const isOrgMember = githubElevated.orgs.checkMembership({
+      const isOrgMember = await githubElevated.orgs.checkMembership({
         org,
         mentionedUsername
       });
